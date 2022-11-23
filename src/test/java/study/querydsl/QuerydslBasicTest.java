@@ -24,8 +24,12 @@ public class QuerydslBasicTest {
     @PersistenceContext
     EntityManager em;
 
+    JPAQueryFactory queryFactory;
+
     @BeforeEach
     public void before() {
+
+        queryFactory = new JPAQueryFactory(em);
         Team teamA = new Team("teamA");
         Team teamB = new Team("teamB");
 
@@ -59,7 +63,6 @@ public class QuerydslBasicTest {
 
     @Test
     public void startQuerydsl() {
-        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 
         Member foundMember = queryFactory
                 .select(member)
@@ -69,4 +72,28 @@ public class QuerydslBasicTest {
 
         assertThat(foundMember.getUsername()).isEqualTo("member1");
     }
+
+    @Test
+    public void search() {
+        Member foundMember = queryFactory
+                .selectFrom(member)
+                .where(member.username.eq("member1")
+                        .and(member.age.eq(10)))
+                .fetchOne();
+
+        assertThat(foundMember.getUsername()).isEqualTo("member1");
+    }
+
+    @Test
+    public void search2() {
+        Member foundMember = queryFactory
+                .selectFrom(member)
+                .where(member.username.eq("member1"),
+                        member.age.eq(10))
+                .fetchOne();
+
+        assertThat(foundMember.getUsername()).isEqualTo("member1");
+    }
+
+
 }
