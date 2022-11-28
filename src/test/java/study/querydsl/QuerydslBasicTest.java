@@ -95,5 +95,20 @@ public class QuerydslBasicTest {
         assertThat(foundMember.getUsername()).isEqualTo("member1");
     }
 
+    @Test
+    public void searchResult() {
+        List<Member> fetch = queryFactory
+                .selectFrom(member)
+                .fetch();
+
+/*        Member member = queryFactory
+                .selectFrom(QMember.member)
+                .fetchOne();*/
+
+        Member member1 = queryFactory
+                .selectFrom(QMember.member)
+                .fetchFirst();
+    }
+
 
 }
