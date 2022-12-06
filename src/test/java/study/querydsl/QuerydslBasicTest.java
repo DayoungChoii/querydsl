@@ -187,5 +187,20 @@ public class QuerydslBasicTest {
 
     }
 
+    @Test
+    public void join() {
+        List<Member> result = queryFactory
+                .selectFrom(member)
+                .join(member.team, team)
+                .where(team.name.eq("teamA"))
+                .fetch();
+
+
+
+        assertThat(result)
+                .extracting("username")
+                .contains("member1", "member2");
+    }
+
 
 }
