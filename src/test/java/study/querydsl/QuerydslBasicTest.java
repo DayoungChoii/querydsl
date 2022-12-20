@@ -2,6 +2,7 @@ package study.querydsl;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.assertj.core.api.Assertions;
@@ -312,6 +313,33 @@ public class QuerydslBasicTest {
             System.out.println("s = " + s);
 
         }
+
+    }
+
+    @Test
+    public void constant() throws Exception {
+        Tuple result = queryFactory
+                .select(member.username, Expressions.constant("A"))
+                .from(member)
+                .fetchFirst();
+
+        System.out.println(result);
+    }
+
+    @Test
+    public void concat() throws Exception{
+        //given
+        List<String> fetch = queryFactory
+                .select(member.username.concat("_").concat(member.age.stringValue()))
+                .from(member)
+                .where(member.username.eq("memberA"))
+                .fetch();
+        //when
+        for (String s : fetch) {
+            System.out.println("s = " + s);
+        }
+
+        //then
 
     }
 
